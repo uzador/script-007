@@ -1,1 +1,1 @@
-conig
+WORKING_DIR = 'work'
