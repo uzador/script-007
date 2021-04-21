@@ -49,11 +49,14 @@ def get_meta(file_name):
         ctime = datetime.fromtimestamp(os.path.getctime(file_to_get_meta))
         mtime = datetime.fromtimestamp(os.path.getmtime(file_to_get_meta))
 
-        print('size: {} bytes\natime: {}\nctime: {}\nmtime: {}'.format(size, atime, ctime, mtime))
+        print('size: {} bytes\natime: {}\nctime: {}\nmtime: {}'
+              .format(size, atime, ctime, mtime))
     except IOError as ioe:
-        print('Can not get metadata {} cause {}'.format(file_name, ioe.strerror))
+        print('Can not get metadata {} cause {}'
+              .format(file_name, ioe.strerror))
     except OSError as ose:
-        print('Can not get metadata {} cause {}'.format(file_name, ose.strerror))
+        print('Can not get metadata {} cause {}'
+              .format(file_name, ose.strerror))
 
 
 COMMANDS = {
