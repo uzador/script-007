@@ -3,15 +3,19 @@ import utils
 from datetime import datetime
 
 
-def create(file_name, extra):
+def create(file_name, content):
+    """ Function to create file:
+    file_name: name of creating file
+    content: content of creating file
+    """
     file_to_create = utils.build_path(file_name)
     if os.path.exists(file_to_create):
         print('Can not create {} cause file existed'.format(file_name))
 
     try:
         with open(file_to_create, 'w') as f:
-            if extra:
-                for line in extra:
+            if content:
+                for line in content:
                     f.write(line + '\n')
             else:
                 f.write('empty file')
@@ -20,6 +24,9 @@ def create(file_name, extra):
 
 
 def remove(file_name):
+    """ Function to remove file:
+    file_name: name of removing file
+    """
     try:
         file_to_remove = utils.build_path(file_name)
         os.remove(file_to_remove)
@@ -28,6 +35,9 @@ def remove(file_name):
 
 
 def read(file_name):
+    """ Function to read file:
+    file_name: name of reading file
+    """
     try:
         file_to_read = utils.build_path(file_name)
 
@@ -41,6 +51,9 @@ def read(file_name):
 
 
 def get_meta(file_name):
+    """ Function to get file's meta date:
+    file_name: name of reading file
+    """
     try:
         file_to_get_meta = utils.build_path(file_name)
 
@@ -68,13 +81,19 @@ COMMANDS = {
 
 
 def default_cmd(name):
+    """ Function to be called when incoming command is unknown """
     print('Unknown command: {}'.format(name))
 
 
-def process(cmd, file_name, extra):
+def process(cmd, file_name, content):
+    """ Handler to process incoming commands
+    cmd: command name
+    file_name: file to be processed by command
+    content: content of the file in case of create command
+    """
     utils.check_working_dir()
     cmd_to_execute = COMMANDS.get(cmd, default_cmd)
-    if extra:
-        cmd_to_execute(file_name, extra)
+    if content:
+        cmd_to_execute(file_name, content)
     else:
         cmd_to_execute(file_name)
