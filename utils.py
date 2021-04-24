@@ -4,8 +4,10 @@ import argparse
 from config import WORKING_DIR
 
 
-logging.basicConfig(level=logging.DEBUG, filename='server.log',
-                    format='%(asctime)s %(levelname)s:%(message)s')
+# logging.basicConfig(level=logging.DEBUG, filename='server.log',
+#                     format='%(asctime)s %(levelname)s:%(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def parse_args():
@@ -30,8 +32,7 @@ def parse_args():
 
 def check_working_dir():
     """ Checks if working dir exists and creates one otherwise """
-    if os.path.exists(WORKING_DIR):
-        logging.debug("working dir exists")
+    if os.path.isdir(WORKING_DIR):
         return True
     else:
         os.mkdir(WORKING_DIR)
@@ -40,5 +41,5 @@ def check_working_dir():
 
 
 def build_path(file_name):
-    """ Generic function to build file path """
+    """ Generic function to build file path inside WORKING_DIR"""
     return os.path.join('.', WORKING_DIR, file_name)
