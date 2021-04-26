@@ -1,2 +1,2 @@
-pycodestyle --exclude=env_p2 .
-flake8 --exclude=env_p2 .
+pycodestyle --exclude=env_p2,env_p3 .
+flake8 --exclude=env_p2,env_p3 .
