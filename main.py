@@ -1,6 +1,6 @@
 import utils
-import file_service
+from file_service import FileService
 
 if __name__ == '__main__':
     args = utils.parse_args()
-    file_service.process(args.command, args.file_name, args.content)
+    FileService.process(args.command, args.file_name, args.content)
