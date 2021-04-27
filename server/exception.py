@@ -22,7 +22,13 @@ class GetMetaDataException(Exception):
         self.msg = msg
 
 
-class UnknownCommand(Exception):
+class UnknownCommandException(Exception):
+    def __init__(self, msg):
+        super().__init__(msg)
+        self.msg = msg
+
+
+class SignatureException(Exception):
     def __init__(self, msg):
         super().__init__(msg)
         self.msg = msg

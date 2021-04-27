@@ -4,9 +4,10 @@ import re
 import pytest
 import shutil
 import server.exception as exception
-from server.file_service import FileService
+from server.file_service_signed import FileServiceSigned
+import server.utils as u
 
-fs = FileService()
+fs = FileServiceSigned()
 
 
 @pytest.fixture(scope='function')
@@ -28,6 +29,8 @@ def test_create_file_new_name(setup_and_cleanup):
 
     assert expected_content == content
 
+    assert os.path.isfile(u.get_file_signed_path(file_path))
+
 
 def test_create_file_with_existing_name(setup_and_cleanup):
     file_name = "test_file.txt"
@@ -46,9 +49,7 @@ def test_read_existing_file(setup_and_cleanup):
     expected_content = "test_content"
     file_path = os.path.join(setup_and_cleanup, file_name)
 
-    with open(file_path, "w") as f:
-        f.write(expected_content)
-
+    fs.create(file_path, expected_content)
     content = fs.read(file_path)
 
     assert expected_content == content
@@ -58,25 +59,25 @@ def test_read_not_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
+    file_signed_path = u.get_file_signed_path(file_path)
     with pytest.raises(exception.ReadFileException) as rfe:
         fs.read(file_path)
 
-    assert f'Can not read {file_path} cause No such file or directory'\
+    assert f'Can not read {file_signed_path} cause No such file or directory'\
            == str(rfe.value)
 
 
 def test_remove_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
+    file_signed_path = u.get_file_signed_path(file_path)
 
-    with open(file_path, 'w') as f:
-        f.write(expected_content)
-
+    fs.create(file_path, "no matter what")
     fs.remove(file_path)
 
     assert not os.path.exists(file_path)
+    assert not os.path.exists(file_signed_path)
 
 
 def test_remove_not_existing_file(setup_and_cleanup):

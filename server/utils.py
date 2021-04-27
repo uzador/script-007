@@ -38,5 +38,10 @@ def check_working_dir():
 
 
 def build_path(file_name):
-    """ Generic function to build file path inside WORKING_DIR"""
+    """ Function to build file path using config.WORKING_DIR"""
     return os.path.join(WORKING_DIR, file_name)
+
+
+def get_file_signed_path(file_path):
+    file, ext = os.path.splitext(file_path)
+    return file + '.sig'
