@@ -24,9 +24,11 @@ class FileService:
                         f.write('empty file')
                 logger.info(f'file {file_path} created')
             except OSError as ose:
-                raise exception.CreateFileException(f'Can not create {file_path} cause {ose.strerror}')
+                raise exception.CreateFileException(
+                    f'Can not create {file_path} cause {ose.strerror}')
         else:
-            raise exception.CreateFileException(f'Can not create {file_path} cause it exists')
+            raise exception.CreateFileException(
+                f'Can not create {file_path} cause it exists')
 
     def remove(self, file_path):
         """ Function to remove file:
@@ -36,7 +38,8 @@ class FileService:
             os.remove(file_path)
             logger.info(f'file {file_path} removed')
         except OSError as e:
-            raise exception.RemoveFileException(f'Can not remove {file_path} cause {e.strerror}')
+            raise exception.RemoveFileException(
+                f'Can not remove {file_path} cause {e.strerror}')
 
     def read(self, file_path):
         """ Function to read file
@@ -46,7 +49,8 @@ class FileService:
             with open(file_path, 'r') as f:
                 return f.read()
         except OSError as ose:
-            raise exception.ReadFileException(f'Can not read {file_path} cause {ose.strerror}')
+            raise exception.ReadFileException(
+                f'Can not read {file_path} cause {ose.strerror}')
 
     def get_meta(self, file_path):
         """ Function to get file's meta date:
@@ -61,4 +65,5 @@ class FileService:
             return f'size: {size} bytes access_time: {access_time}' \
                    f' create_time: {create_time} modify_time: {modify_time}'
         except OSError as ose:
-            raise exception.GetMetaDataException(f'Can not get metadata {file_path} cause {ose.strerror}')
+            raise exception.GetMetaDataException(
+                f'Can not get metadata {file_path} cause {ose.strerror}')

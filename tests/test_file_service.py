@@ -59,7 +59,8 @@ def test_read_not_existing_file(setup_and_cleanup):
     with pytest.raises(exception.ReadFileException) as rfe:
         fs.read(file_path)
 
-    assert f'Can not read {file_path} cause No such file or directory' == str(rfe.value)
+    assert f'Can not read {file_path} cause No such file or directory'\
+           == str(rfe.value)
 
 
 def test_remove_existing_file(setup_and_cleanup):
@@ -94,8 +95,9 @@ def test_get_meta_data_existing_file(setup_and_cleanup):
         f.write(expected_content)
 
     meta_data = fs.get_meta(file_path)
-    assert re.match('size: .* bytes access_time: .* create_time: .* modify_time: .*',
-                    meta_data)
+    assert re.match(
+        'size: .* bytes access_time: .* create_time: .* modify_time: .*',
+        meta_data)
 
 
 def test_get_meta_data_not_existing_file(setup_and_cleanup):

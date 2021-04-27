@@ -55,6 +55,7 @@ def process(cmd, file_name, content):
 
 if __name__ == '__main__':
     args = utils.parse_args()
-    logger.info(f'command: {args.command}, file_name: {args.file_name}, content: {args.content}')
+    logger.info(f'command: {args.command}, file_name: {args.file_name},'
+                f' content: {args.content}')
 
     process(args.command, args.file_name, args.content)
