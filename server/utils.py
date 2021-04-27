@@ -1,11 +1,8 @@
 import os
 import logging
 import argparse
-from config import WORKING_DIR
+from server.config import WORKING_DIR
 
-
-# logging.basicConfig(level=logging.DEBUG, filename='server.log',
-#                     format='%(asctime)s %(levelname)s:%(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -14,8 +11,8 @@ def parse_args():
     """ Parse incoming arguments:
 
     -c/--command -- executed command (create, delete, read, get_meta)
-    -f/--file_name -- file to be processed by above command
-    -c/--content -- content for command create
+    -n/--file_name -- file to be processed by above command
+    -e/--content -- content for command create
     """
     parser = argparse.ArgumentParser(
         description='Process commands: create, delete, read, get_meta')
@@ -42,4 +39,4 @@ def check_working_dir():
 
 def build_path(file_name):
     """ Generic function to build file path inside WORKING_DIR"""
-    return os.path.join('.', WORKING_DIR, file_name)
+    return os.path.join(WORKING_DIR, file_name)

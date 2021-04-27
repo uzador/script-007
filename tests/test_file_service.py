@@ -3,7 +3,8 @@ import tempfile
 import re
 import pytest
 import shutil
-import file_service as fs
+from server import fs
+import server.exception as exception
 
 
 @pytest.fixture(scope='function')
@@ -18,7 +19,7 @@ def test_create_file_new_name(setup_and_cleanup):
     expected_content = "test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
-    fs.FileService.create(file_path, expected_content)
+    fs.create(file_path, expected_content)
 
     with open(file_path, 'r') as f:
         content = f.read()
@@ -31,12 +32,11 @@ def test_create_file_with_existing_name(setup_and_cleanup):
     expected_content = "test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
-    with pytest.raises(fs.CreateFileException) as cfe:
-        fs.FileService.create(file_path, expected_content)
-        fs.FileService.create(file_path, expected_content)
+    with pytest.raises(exception.CreateFileException) as cfe:
+        fs.create(file_path, expected_content)
+        fs.create(file_path, expected_content)
 
-    assert 'Can not create {} cause it exists'\
-        .format(file_path) == str(cfe.value)
+    assert f'Can not create {file_path} cause it exists' == str(cfe.value)
 
 
 def test_read_existing_file(setup_and_cleanup):
@@ -47,7 +47,7 @@ def test_read_existing_file(setup_and_cleanup):
     with open(file_path, "w") as f:
         f.write(expected_content)
 
-    content = fs.FileService.read(file_path)
+    content = fs.read(file_path)
 
     assert expected_content == content
 
@@ -56,11 +56,10 @@ def test_read_not_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
-    with pytest.raises(fs.ReadFileException) as rfe:
-        fs.FileService.read(file_path)
+    with pytest.raises(exception.ReadFileException) as rfe:
+        fs.read(file_path)
 
-    assert 'Can not read {} cause No such file or directory'\
-        .format(file_path) == str(rfe.value)
+    assert f'Can not read {file_path} cause No such file or directory' == str(rfe.value)
 
 
 def test_remove_existing_file(setup_and_cleanup):
@@ -72,7 +71,7 @@ def test_remove_existing_file(setup_and_cleanup):
     with open(file_path, 'w') as f:
         f.write(expected_content)
 
-    fs.FileService.remove(file_path)
+    fs.remove(file_path)
 
     assert not os.path.exists(file_path)
 
@@ -81,9 +80,9 @@ def test_remove_not_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
-    with pytest.raises(fs.RemoveFileException,
+    with pytest.raises(exception.RemoveFileException,
                        match=r'Can not remove .* cause .*'):
-        fs.FileService.remove(file_path)
+        fs.remove(file_path)
 
 
 def test_get_meta_data_existing_file(setup_and_cleanup):
@@ -94,8 +93,8 @@ def test_get_meta_data_existing_file(setup_and_cleanup):
     with open(file_path, "w") as f:
         f.write(expected_content)
 
-    meta_data = fs.FileService.get_meta(file_path)
-    assert re.match('size: .* bytes atime: .* ctime: .* mtime: .*',
+    meta_data = fs.get_meta(file_path)
+    assert re.match('size: .* bytes access_time: .* create_time: .* modify_time: .*',
                     meta_data)
 
 
@@ -103,6 +102,6 @@ def test_get_meta_data_not_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
-    with pytest.raises(fs.GetMetaDataException,
+    with pytest.raises(exception.GetMetaDataException,
                        match=r'Can not get metadata .* cause .*'):
-        fs.FileService.get_meta(file_path)
+        fs.get_meta(file_path)
