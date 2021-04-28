@@ -33,7 +33,7 @@ def process(cmd, file_name, content):
         cmd_to_execute = COMMANDS.get(cmd, default_cmd)
         file_path = utils.build_path(file_name)
         if content:
-            result = cmd_to_execute(file_path, content)
+            result = cmd_to_execute(file_path, utils.encode_content(content))
         else:
             result = cmd_to_execute(file_path)
 

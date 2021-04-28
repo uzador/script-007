@@ -1,7 +1,7 @@
 import os
 import logging
-import server.exception as exception
 from datetime import datetime
+import server.exception as exception
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -9,19 +9,18 @@ logger.setLevel(logging.INFO)
 
 class FileService:
 
-    def create(self, file_path, content):
+    def create(self, file_path: str, content: bytes) -> None:
         """ Function to create file:
         file_name: name of created file
         content: content of created file
         """
         if not os.path.exists(file_path):
             try:
-                with open(file_path, 'w') as f:
+                with open(file_path, 'wb') as f:
                     if content:
-                        for line in content:
-                            f.write(line)
+                        f.write(content)
                     else:
-                        f.write('empty file')
+                        f.write(b'empty file')
                 logger.info(f'file {file_path} created')
             except OSError as ose:
                 raise exception.CreateFileException(
@@ -30,7 +29,7 @@ class FileService:
             raise exception.CreateFileException(
                 f'Can not create {file_path} cause it exists')
 
-    def remove(self, file_path):
+    def remove(self, file_path: str) -> None:
         """ Function to remove file:
         file_name: name of removed file
         """
@@ -41,18 +40,18 @@ class FileService:
             raise exception.RemoveFileException(
                 f'Can not remove {file_path} cause {e.strerror}')
 
-    def read(self, file_path):
+    def read(self, file_path: str) -> bytes:
         """ Function to read file
         Takes file and returns its content
         """
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, 'rb') as f:
                 return f.read()
         except OSError as ose:
             raise exception.ReadFileException(
                 f'Can not read {file_path} cause {ose.strerror}')
 
-    def get_meta(self, file_path):
+    def get_meta(self, file_path: str) -> str:
         """ Function to get file's meta date:
         file_name: name of the file
         """

@@ -4,7 +4,7 @@ import re
 import pytest
 import shutil
 import server.exception as exception
-from server.file_service_signed import FileServiceSigned
+from server.file_service_hash_signed import FileServiceSigned
 import server.utils as u
 
 fs = FileServiceSigned()
@@ -19,12 +19,12 @@ def setup_and_cleanup():
 
 def test_create_file_new_name(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
+    expected_content = b"test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
     fs.create(file_path, expected_content)
 
-    with open(file_path, 'r') as f:
+    with open(file_path, 'rb') as f:
         content = f.read()
 
     assert expected_content == content
@@ -34,7 +34,7 @@ def test_create_file_new_name(setup_and_cleanup):
 
 def test_create_file_with_existing_name(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
+    expected_content = b"test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
     with pytest.raises(exception.CreateFileException) as cfe:
@@ -46,7 +46,7 @@ def test_create_file_with_existing_name(setup_and_cleanup):
 
 def test_read_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
+    expected_content = b"test_content"
     file_path = os.path.join(setup_and_cleanup, file_name)
 
     fs.create(file_path, expected_content)
@@ -73,7 +73,7 @@ def test_remove_existing_file(setup_and_cleanup):
     file_path = os.path.join(setup_and_cleanup, file_name)
     file_signed_path = u.get_file_signed_path(file_path)
 
-    fs.create(file_path, "no matter what")
+    fs.create(file_path, b"no matter what")
     fs.remove(file_path)
 
     assert not os.path.exists(file_path)
@@ -91,10 +91,10 @@ def test_remove_not_existing_file(setup_and_cleanup):
 
 def test_get_meta_data_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
+    expected_content = b"test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
-    with open(file_path, "w") as f:
+    with open(file_path, "wb") as f:
         f.write(expected_content)
 
     meta_data = fs.get_meta(file_path)

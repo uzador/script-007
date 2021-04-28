@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     """ Parse incoming arguments:
 
     -c/--command -- executed command (create, delete, read, get_meta)
@@ -27,7 +27,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def check_working_dir():
+def check_working_dir() -> bool:
     """ Checks if working dir exists and creates one otherwise """
     if os.path.isdir(WORKING_DIR):
         return True
@@ -37,11 +37,23 @@ def check_working_dir():
         return False
 
 
-def build_path(file_name):
-    """ Function to build file path using config.WORKING_DIR"""
+def build_path(file_name: str) -> str:
+    """ Build file path from config.WORKING_DIR """
     return os.path.join(WORKING_DIR, file_name)
 
 
-def get_file_signed_path(file_path):
+def encode_content(content: list) -> bytes:
+    """ Encode content to bytes """
+    return b''.join([part.encode() for part in content])
+
+
+def get_file_signed_path(file_path: str) -> str:
+    """ Change file extension to .sig """
     file, ext = os.path.splitext(file_path)
     return file + '.sig'
+
+
+def get_file_key_path(file_path):
+    """ Change file extension to .bin """
+    file, ext = os.path.splitext(file_path)
+    return file + '.bin'

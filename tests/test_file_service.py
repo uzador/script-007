@@ -18,12 +18,12 @@ def setup_and_cleanup():
 
 def test_create_file_new_name(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
+    expected_content = b"test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
     fs.create(file_path, expected_content)
 
-    with open(file_path, 'r') as f:
+    with open(file_path, 'rb') as f:
         content = f.read()
 
     assert expected_content == content
@@ -31,7 +31,7 @@ def test_create_file_new_name(setup_and_cleanup):
 
 def test_create_file_with_existing_name(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
+    expected_content = b"test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
     with pytest.raises(exception.CreateFileException) as cfe:
@@ -43,10 +43,10 @@ def test_create_file_with_existing_name(setup_and_cleanup):
 
 def test_read_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
+    expected_content = b"test_content"
     file_path = os.path.join(setup_and_cleanup, file_name)
 
-    with open(file_path, "w") as f:
+    with open(file_path, "wb") as f:
         f.write(expected_content)
 
     content = fs.read(file_path)
@@ -90,10 +90,10 @@ def test_remove_not_existing_file(setup_and_cleanup):
 
 def test_get_meta_data_existing_file(setup_and_cleanup):
     file_name = "test_file.txt"
-    expected_content = "test_content"
+    expected_content = b"test_content"
 
     file_path = os.path.join(setup_and_cleanup, file_name)
-    with open(file_path, "w") as f:
+    with open(file_path, "wb") as f:
         f.write(expected_content)
 
     meta_data = fs.get_meta(file_path)
